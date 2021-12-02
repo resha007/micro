@@ -7,7 +7,7 @@
 
 	if(isset($_POST['login'])){
 
-		// Include passwort pepper
+		// Include passwort pepper edit
 		require 'config/pepper.php';
 
 		// Sanitize user input
