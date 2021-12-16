@@ -340,6 +340,9 @@
 				if ($tab_no == 4) echo ' id="tab_selected"';
 				echo '><a href="books_expense.php"><i class="fa fa-calculator fa-fw"></i> Accounting</a></li>
 				<li';
+				if ($tab_no == 8) echo ' id="tab_selected"';
+				echo '><a href="line_curr.php"><i class="fa fa-line fa-fw"></i> Line</a></li>
+				<li';
 				if ($tab_no == 7) echo ' id="tab_selected"';
 				echo '><a href="empl_curr.php"><i class="fa fa-male fa-fw"></i> Employees</a></li>';
 
