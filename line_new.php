@@ -32,18 +32,7 @@
 
 <html>
 	<?PHP includeHead('New Line',0) ?>
-		<script>
-			function validate(form){
-				fail = validateName(form.empl_name.value)
-				fail += validateDob(form.empl_dob.value)
-				fail += validateAddress(form.empl_address.value)
-				fail += validatePhone(form.empl_phone.value)
-				fail += validateEmail(form.empl_email.value)
-				if (fail == "") return true;
-				else { alert(fail); return false; }
-			}
-		</script>
-		<script src="functions_validate.js"></script>
+		
 	</head>
 	<body>
 		<!-- MENU -->
