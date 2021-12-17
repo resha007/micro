@@ -604,6 +604,19 @@
 		return $query_emplcurr;
 	}
 
+	/**
+	* Get all lines
+	* @return array query_emplcurr : Array with the result of the SQL query
+	*/
+	function getLineCurr($db_link){
+		$timestamp = time();
+		$sql_linecurr = 'SELECT * FROM line ORDER BY line_id';
+		$query_linecurr = mysqli_query($db_link, $sql_linecurr);
+		checkSQL($db_link, $query_linecurr, $db_link);
+
+		return $query_linecurr;
+	}
+
 /**
 	* Get all past employees
 	* @return array query_emplpast : Array with the result of the SQL query
