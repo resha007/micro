@@ -49,6 +49,11 @@
 	$query_mstat = mysqli_query($db_link, $sql_mstat);
 	checkSQL($db_link, $query_mstat);
 
+	//Select line for Drop-down-Menu
+	$sql_line = "SELECT * FROM line where status=1";
+	$query_line = mysqli_query($db_link, $sql_line);
+	checkSQL($db_link, $query_line);
+
 	//Build new EMPL_NO
 	$newEmplNo = buildEmplNo($db_link);
 ?>
@@ -135,6 +140,26 @@
 					<tr>
 						<td>Position:</td>
 						<td><input type="text" name="empl_position" placeholder="Job description" tabindex=6 /></td>
+
+						<td>Type:</td>
+						<td>
+							<select name="empl_type" size="1" tabindex=7>';
+								<option value="Employee" selected>Employee</option>
+								<option value="Rider">Rider</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+							<td>Line:</td>
+							<td>
+								<select name="line_id" size="1" tabindex=5>';
+									<?PHP
+									while ($row_line = mysqli_fetch_assoc($query_line)){
+										echo '<option value="'.$row_line['line_id'].'">'.$row_line['name'].'</option>';
+									}
+									?>
+								</select>
+							</td>
 					</tr>
 					<tr>
 						<td colspan="4" class="center">
