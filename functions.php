@@ -591,6 +591,15 @@
 		return $result_empl;
 	}
 
+	function getLine($db_link, $line_id){
+		$sql_line = "SELECT line.line_id, line.code, line.name, emp.empl_id as rider, emp1.empl_id as optrider, line.status FROM line inner join employee emp on line.rider_id = emp.empl_id inner join employee emp1 on line.opt_rider_id = emp1.empl_id where line_id='$line_id' ORDER BY line_id";
+		$query_line = mysqli_query($db_link, $sql_line);
+		checkSQL($db_link, $query_line, $db_link);
+		$result_line = mysqli_fetch_assoc($query_line);
+
+		return $result_line;
+	}
+
 /**
 	* Get all current employees
 	* @return array query_emplcurr : Array with the result of the SQL query
@@ -610,7 +619,7 @@
 	*/
 	function getLineCurr($db_link){
 		$timestamp = time();
-		$sql_linecurr = 'SELECT * FROM line ORDER BY line_id';
+		$sql_linecurr = 'SELECT line.line_id, line.code, line.name, emp.empl_name as rider, emp1.empl_name as optrider, line.status FROM line inner join employee emp on line.rider_id = emp.empl_id inner join employee emp1 on line.opt_rider_id = emp1.empl_id ORDER BY line_id';
 		$query_linecurr = mysqli_query($db_link, $sql_linecurr);
 		checkSQL($db_link, $query_linecurr, $db_link);
 
