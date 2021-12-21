@@ -45,16 +45,26 @@
 				<th>ID</th>
 				<th>Code</th>
 				<th>Name</th>
+				<th>Rider</th>
+				<th>Optional Rider</th>
 				<th>Status</th>
 			</tr>
 			<?PHP
 			$count = 0;
+			$status = "";
 			while ($row_linecurr = mysqli_fetch_assoc($query_linecurr)){
+				if($row_linecurr['status']==1)
+					$status = "Active";
+				else if($row_linecurr['status']==2)
+					$status = "Inactive";
+
 				echo '<tr>
-								<td><a href="Line.php?empl='.$row_linecurr['line_id'].'">'.$row_linecurr['line_id'].'</a></td>
-								<td>'.$row_linecurr['name'].'</td>
+								<td><a href="line.php?line='.$row_linecurr['line_id'].'">'.$row_linecurr['line_id'].'</a></td>
 								<td>'.$row_linecurr['code'].'</td>
-								<td>'.$row_linecurr['status'].'</td>
+								<td>'.$row_linecurr['name'].'</td>
+								<td>'.$row_linecurr['rider'].'</td>
+								<td>'.$row_linecurr['optrider'].'</td>
+								<td>'.$status.'</td>
 							</tr>';
 
 				array_push($_SESSION['rep_export'], array("Line ID" => $row_linecurr['line_id'], "Line Code" => $row_linecurr['code'], "Line Name" => $row_linecurr['name']));
