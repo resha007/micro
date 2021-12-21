@@ -13,10 +13,12 @@
 		//Sanitize user input
 		$line_code = sanitize($db_link, $_POST['line_code']);
 		$line_name = sanitize($db_link, $_POST['line_name']);
+		$rider = sanitize($db_link, $_POST['rider_id']);
+		$opt_rider = sanitize($db_link, $_POST['optRider_id']);
 		$line_status = sanitize($db_link, $_POST['line_status']);
 
 		//Insert new Line into Line
-		$sql_insert = "INSERT INTO Line (code, name, status) VALUES ('$line_code', '$line_name', '$line_status')";
+		$sql_insert = "INSERT INTO Line (code, name,rider_id,opt_rider_id, status) VALUES ('$line_code', '$line_name','$rider','$opt_rider', '$line_status')";
 		$query_insert = mysqli_query($db_link, $sql_insert);
 		checkSQL($db_link, $query_insert);
 
@@ -27,6 +29,15 @@
 		//header('Location: empl_new_pic.php');
 	}
 
+	//Select riders for Drop-down-Menu
+	$sql_rider = "SELECT * FROM employee where empl_type = 'Rider'";
+	$query_rider = mysqli_query($db_link, $sql_rider);
+	checkSQL($db_link, $query_rider);
+
+	//Select riders for Drop-down-Menu
+	$sql_optrider = "SELECT * FROM employee where empl_type = 'Rider'";
+	$query_optrider = mysqli_query($db_link, $sql_optrider);
+	checkSQL($db_link, $query_optrider);
 	
 ?>
 
@@ -58,6 +69,34 @@
 					<tr>
 						<td>Name:</td>
 						<td><input type="text" name="line_name" placeholder="Line Name" tabindex=2 /></td>
+					</tr>
+					<tr>
+							<td>Rider:</td>
+							<td>
+								<select name="rider_id" size="1" tabindex=5>';
+									<option selected disabled>Select a Rider</option>
+									<?PHP
+									while ($row_line = mysqli_fetch_assoc($query_rider)){
+										echo '<option value="'.$row_line['empl_id'].'">'.$row_line['empl_name'].'</option>';
+									}
+									?>
+								</select>
+							</td>
+							
+					</tr>
+					<tr>
+							<td>Optional Rider:</td>
+							<td>
+								<select name="optRider_id" size="1" tabindex=5>';
+									<option selected disabled>Select a optional Rider</option>
+									<?PHP
+									while ($row_line = mysqli_fetch_assoc($query_optrider)){
+										echo '<option value="'.$row_line['empl_id'].'">'.$row_line['empl_name'].'</option>';
+									}
+									?>
+								</select>
+							</td>
+							
 					</tr>
 					<tr>
 						<td>Status:</td>
