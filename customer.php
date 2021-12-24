@@ -32,10 +32,11 @@
 		if ($cust_lengthres == 0 OR $cust_lengthres == NULL) $cust_lengthres = NULL;
 		$custsick_id = sanitize($db_link, $_POST['custsick_id']);
 		$cust_active = sanitize($db_link, $_POST['cust_active']);
+		$line_id = sanitize($db_link, $_POST['line_id']);
 		$timestamp = time();
 
 		//Update CUSTOMER
-		$sql_update = "UPDATE customer SET cust_no = '$cust_no', cust_name = '$cust_name', cust_dob = $cust_dob, custsex_id = $custsex_id, cust_address = '$cust_address', cust_phone = '$cust_phone', cust_email = '$cust_email', cust_occup = '$cust_occup', custmarried_id = $custmarried_id, cust_heir = '$cust_heir', cust_heirrel = '$cust_heirrel', custsick_id = $custsick_id, cust_active = '$cust_active', cust_lastupd = $timestamp, user_id = $_SESSION[log_id] WHERE cust_id = $_SESSION[cust_id]";
+		$sql_update = "UPDATE customer SET cust_no = '$cust_no', cust_name = '$cust_name', cust_dob = $cust_dob, custsex_id = $custsex_id, cust_address = '$cust_address', cust_phone = '$cust_phone', cust_email = '$cust_email', cust_occup = '$cust_occup', custmarried_id = $custmarried_id, cust_heir = '$cust_heir', cust_heirrel = '$cust_heirrel', custsick_id = $custsick_id, cust_active = '$cust_active', cust_lastupd = $timestamp, user_id = $_SESSION[log_id], line_id = '$line_id' WHERE cust_id = $_SESSION[cust_id]";
 		$query_update = mysqli_query($db_link, $sql_update);
 		checkSQL($db_link, $query_update);
 		header('Location: customer.php?cust='.$_SESSION['cust_id']);
@@ -66,6 +67,11 @@
 	$sql_sex = "SELECT * FROM custsex";
 	$query_sex = mysqli_query($db_link, $sql_sex);
 	checkSQL($db_link, $query_sex);
+
+	//Select lines for dropdown-menu
+	$sql_line = "SELECT * FROM line where status ='1'";
+	$query_line = mysqli_query($db_link, $sql_line);
+	checkSQL($db_link, $query_line);
 
 	//Select Shares from SHARES
 	$sql_sha = "SELECT * FROM shares WHERE cust_id = '$_SESSION[cust_id]'";
@@ -239,9 +245,19 @@
 										<td><input type="text" disabled="diabled" value="'.date("d.m.Y", $result_cust['cust_lastupd']).' / '.$result_cust['user_name'].'" /></td>
 										<td>E-Mail:</td>
 										<td><input type="text" name="cust_email" value="'.$result_cust['cust_email'].'" placeholder="abc@xyz.com" tabindex="7" /></td>
-										<td></td>
-										<td><input type="submit" name="update" value="Save Changes" tabindex="14" /></td>
-									</tr>';
+										<td>Line:</td>
+										<td>
+											<select name="line_id" size="1" tabindex="10">
+											<option selected disabled>Select a Line</option>';
+											while ($row_line = mysqli_fetch_assoc($query_line)){
+												if($row_line['line_id'] == $result_cust['line_id']){
+													echo '<option selected value="'.$row_line['line_id'].'">'.$row_line['code'].' - '.$row_line['name'].'</option>';
+												}
+												else echo '<option value="'.$row_line['line_id'].'">'.$row_line['code'].' - '.$row_line['name'].'</option>';
+											}
+										echo '</td>
+									</tr>
+									<tr><td><input type="submit" name="update" value="Save Changes" tabindex="14" /></td></tr>';
 					?>
 				</table>
 
