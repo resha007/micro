@@ -24,10 +24,11 @@
 		$cust_heirrel = sanitize($db_link, $_POST['cust_heirrel']);
 		$custsick_id = sanitize($db_link, $_POST['custsick_id']);
 		$cust_since = strtotime(sanitize($db_link, $_POST['cust_since']));
+		$line_id = sanitize($db_link, $_POST['line_id']);
 		$_SESSION['receipt_no'] = sanitize($db_link, $_POST['receipt_no']);
 
 		//Insert new Customer into CUSTOMER
-		$sql_insert = "INSERT INTO customer (cust_no, cust_name, cust_dob, custsex_id, cust_address, cust_phone, cust_email, cust_occup, custmarried_id, cust_heir, cust_heirrel, cust_since, custsick_id, cust_lastsub, cust_active, cust_lastupd, user_id) VALUES ('$cust_no', '$cust_name', '$cust_dob', '$custsex_id', '$cust_address', '$cust_phone', '$cust_email', '$cust_occup', $custmarried_id, '$cust_heir', '$cust_heirrel', $cust_since, $custsick_id, $cust_since, '1', $timestamp, $_SESSION[log_id])";
+		$sql_insert = "INSERT INTO customer (cust_no, cust_name, cust_dob, custsex_id, cust_address, cust_phone, cust_email, cust_occup, custmarried_id, cust_heir, cust_heirrel, cust_since, custsick_id, cust_lastsub, cust_active, cust_lastupd, user_id, line_id) VALUES ('$cust_no', '$cust_name', '$cust_dob', '$custsex_id', '$cust_address', '$cust_phone', '$cust_email', '$cust_occup', $custmarried_id, '$cust_heir', '$cust_heirrel', $cust_since, $custsick_id, $cust_since, '1', $timestamp, $_SESSION[log_id], '$line_id')";
 		$query_insert = mysqli_query($db_link, $sql_insert);
 		checkSQL($db_link, $query_insert);
 
@@ -39,9 +40,9 @@
 		$_SESSION['cust_id'] = $maxid['MAX(cust_id)'];
 
 		//Insert Entrance Fee and Stationary Sales into INCOMES
-		$sql_insert_fee = "INSERT INTO incomes (cust_id, inctype_id, 	inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ($_SESSION[cust_id], '1', $_SESSION[fee_entry], $cust_since, '$_SESSION[receipt_no]', $timestamp, $_SESSION[log_id]), ($_SESSION[cust_id], '6', $_SESSION[fee_stationary], $cust_since, '$_SESSION[receipt_no]', '$timestamp', '$_SESSION[log_id]')";
-		$query_insert_fee = mysqli_query($db_link, $sql_insert_fee);
-		checkSQL($db_link, $query_insert_fee);
+		//$sql_insert_fee = "INSERT INTO incomes (cust_id, inctype_id, 	inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ($_SESSION[cust_id], '1', $_SESSION[fee_entry], $cust_since, '$_SESSION[receipt_no]', $timestamp, $_SESSION[log_id]), ($_SESSION[cust_id], '6', $_SESSION[fee_stationary], $cust_since, '$_SESSION[receipt_no]', '$timestamp', '$_SESSION[log_id]')";
+		//$query_insert_fee = mysqli_query($db_link, $sql_insert_fee);
+		//checkSQL($db_link, $query_insert_fee);
 
 		//Create a new empty SAVBALANCE entry for the new customer
 		$sql_insert_savbal = "INSERT INTO savbalance (cust_id, savbal_balance, savbal_date, savbal_created, user_id) VALUES ('$_SESSION[cust_id]', '0', '$timestamp', '$timestamp', '$_SESSION[log_id]')";
@@ -66,6 +67,11 @@
 	$sql_sex = "SELECT * FROM custsex";
 	$query_sex = mysqli_query($db_link, $sql_sex);
 	checkSQL($db_link, $query_sex);
+
+	//Select lines for dropdown-menu
+	$sql_line = "SELECT * FROM line where status ='1'";
+	$query_line = mysqli_query($db_link, $sql_line);
+	checkSQL($db_link, $query_line);
 
 	//Build new CUST_NO
 	$newCustNo = buildCustNo($db_link);
@@ -175,11 +181,24 @@
 								?>
 							</select>
 						</td>
-						<td></td>
+						<td>Line:</td>
 						<td>
-							<input type="hidden" name="receipt_no" id="receipt_no" value="" />
-							<input type="submit" name="create" value="Continue" tabindex="14" />
+							<select name="line_id" size="1" tabindex="10">
+							<option selected disabled>Select a Line</option>
+								<?PHP
+								while ($row_line = mysqli_fetch_assoc($query_line)){
+									echo '<option value="'.$row_line['line_id'].'">'.$row_line['code'].' - '.$row_line['name'].'</option>';
+								}
+								?>
+							</select>
 						</td>
+						<tr>
+							<td></td><td></td><td></td><td></td>
+							<td>
+								<input type="hidden" name="receipt_no" id="receipt_no" value="" />
+								<input type="submit" name="create" value="Continue" tabindex="14" />
+							</td>
+						</tr>
 					</tr>
 				</table>
 			</form>
